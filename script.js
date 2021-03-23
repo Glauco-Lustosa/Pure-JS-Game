@@ -49,21 +49,27 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 const player = new Player(x, y, 30, 'blue', 'Player Number One');
-player.draw();
-const project = new Projectile(canvas.width / 2, canvas.height / 2, 5, 'red', { x: 1, y: 1 })
 
-// const projectile = [project]
+const projectile = []
 // Loop animation
 function animate() {
     requestAnimationFrame(animate);
-    // projectile.forEach((projectile) => {
-    //     project.update();
-    // });
-    project.draw();
-    project.update();
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    player.draw();
+    projectile.forEach((projectile) => {
+        projectile.update();
+        projectile.draw();
+    });
 }
 
 window.addEventListener('click', function (event) {
+    const angle = Math.atan2(event.clientY - canvas.height / 2, event.clientX - canvas.width / 2)
+    const velocity = {
+        x: Math.cos(angle),
+        y: Math.sin(angle)
+    }
+    projectile.push(new Projectile(canvas.width / 2, canvas.height / 2, 5, 'red', velocity)
+    )
 
 })
 
