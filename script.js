@@ -18,7 +18,7 @@ class Player {
         c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
         c.fillStyle = this.color;
         c.fill()
-        c.fillText(this.name, x * 0.9, y * 0.9);
+
 
     }
 }
@@ -45,12 +45,60 @@ class Projectile {
     }
 }
 
+
+class Enemy {
+    constructor(x, y, radius, color, velocity) {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.color = color
+        this.velocity = velocity
+    }
+
+    draw() {
+        c.beginPath()
+        c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
+        c.fillStyle = this.color;
+        c.fill()
+
+    }
+    update() {
+        this.x = this.x + this.velocity.x
+        this.y = this.y + this.velocity.y
+    }
+}
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 const player = new Player(x, y, 30, 'blue', 'Player Number One');
 
 const projectile = []
+const enimes = []
+
+function spawEnemies() {
+    setInterval(() => {
+        const radius = Math.random() * (30 - 8) + 8
+        let x
+        let y
+
+        if (Math.random() < 0.5) {
+            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+            y = Math.random() * canvas.height
+            // y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+        } else {
+            x = Math.random() * canvas.width
+            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+
+        }
+        const color = 'green'
+        const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
+        const velocity = {
+            x: Math.cos(angle),
+            y: Math.sin(angle)
+        }
+        enimes.push(new Enemy(x, y, radius, color, velocity))
+    }, 1000)
+}
 // Loop animation
 function animate() {
     requestAnimationFrame(animate);
@@ -60,6 +108,11 @@ function animate() {
         projectile.update();
         projectile.draw();
     });
+    enimes.forEach((enemy) => {
+        enemy.update();
+        enemy.draw();
+
+    })
 }
 
 window.addEventListener('click', function (event) {
@@ -74,3 +127,4 @@ window.addEventListener('click', function (event) {
 })
 
 animate();
+spawEnemies();
